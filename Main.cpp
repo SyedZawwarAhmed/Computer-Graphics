@@ -25,7 +25,7 @@ int main()
 
 	GLfloat vertices[] =
 	{
-		-0.05f, -0.5 * float(sqrt(3)) / 3, 0.0f,
+		-0.5f, -0.5 * float(sqrt(3)) / 3, 0.0f,
 		0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,
 		0.0f, 0.5f * float(sqrt(3)) * 2 / 3, 0.0f
 	};
@@ -89,6 +89,7 @@ int main()
 		glUseProgram(shaderProgram);
 		glBindVertexArray(VAO);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
+
 		glfwSwapBuffers(window);
 
 		glfwPollEvents();
