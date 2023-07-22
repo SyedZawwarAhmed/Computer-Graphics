@@ -285,9 +285,6 @@ FakesAssemblies/
 .ntvs_analysis.dat
 node_modules/
 
-# Libraries for OpenGL
-Libraries/
-
 # Visual Studio 6 build log
 *.plg
 
