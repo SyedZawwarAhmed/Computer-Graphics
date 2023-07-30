@@ -105,8 +105,7 @@ void display() {
 	glColor3f(0.15f, 0.55f, 0.3f); // Radiant green color for highway greenery
 	drawRectangle(-1, -1, 1, 0);
 
-	// Draw the bridge
-
+	// Draw the road
 	glColor3f(0.2f, 0.2f, 0.2f); // Dark grayish color for asphalt road
 	drawTriangle(-1.3, -1, 1.3, -1, 0, 0);
 
