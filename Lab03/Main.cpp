@@ -3,18 +3,30 @@
 #include <string>
 #include <GL/glut.h>
 #include <cmath>
+#include <vector>
+
+class Dot {
+public:
+	int x = -1;
+	int y = -1;
+	Dot(int x, int y) {
+		this->x = x;
+		this->y = y;
+	}
+
+	Dot() = default;
+};
 
 int windowWidth = 1600;
 int windowHeight = 900;
 int dot_x = -1;
 int dot_y = -1;
 
+std::vector<Dot> dotsVector = {};
+
 void initGL() {
-	glClearColor(255.0f, 255.0f, 255.0f, 1.0f); // Set clear color to black
+	glClearColor(255.0f, 255.0f, 255.0f, 1.0f);
 	glColor3f(1, 0, 0);
-	//glMatrixMode(GL_PROJECTION);
-	//glLoadIdentity();
-	//gluOrtho2D(0, windowWidth, 0, windowHeight); // Set the coordinate system
 }
 
 void drawDot(int x, int y) {
@@ -28,7 +40,9 @@ void drawDot(int x, int y) {
 void display() {
 	glClear(GL_COLOR_BUFFER_BIT);
 	if (dot_x != -1 && dot_y != -1) {
-		drawDot(dot_x, dot_y); 
+	}
+	for (int i = 0; i < dotsVector.size(); i++) {
+		drawDot(dotsVector[i].x, dotsVector[i].y);
 	}
 	glFlush();
 }
@@ -62,6 +76,8 @@ void mouseHandler(int button, int state, int x, int y) {
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
 		dot_x = x;
 		dot_y = windowHeight - y;
+		Dot newDot = Dot(x, windowHeight - y);
+		dotsVector.push_back(newDot);
 	}
 
 	else if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN) {
@@ -71,6 +87,10 @@ void mouseHandler(int button, int state, int x, int y) {
 }
 
 void motionHandler(int x, int y) {
+	dot_x = x;
+	dot_y = windowHeight - y;
+	Dot newDot = Dot(x, windowHeight - y);
+	dotsVector.push_back(newDot);
 	glutPostRedisplay();
 }
 
