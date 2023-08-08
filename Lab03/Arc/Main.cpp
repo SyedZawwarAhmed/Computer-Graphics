@@ -3,23 +3,40 @@
 
 const double PI = 3.14159265358979323846;
 
-void drawArc(float center_x, float center_y, float radius, float startAngle, float sweep) {
-    int numSegments = 100; // Number of line segments to approximate the arc
+class Point2 {
+public:
+    float x, y;
 
-    glBegin(GL_LINE_STRIP);
+    Point2(float x = 0.0, float y = 0.0) : x(x), y(y) {}
 
-    // Convert angles to radians
-    float angleStart = startAngle * PI / 180;
-    float angleEnd = (startAngle + sweep) * PI / 180;
+    float getX() const {
+        return x;
+    }
 
-    // Calculate the angle increment for each segment
-    float angleInc = (angleEnd - angleStart) / numSegments;
+    float getY() const {
+        return y;
+    }
+};
 
-    for (int i = 0; i <= numSegments; ++i) {
-        float angle = angleStart + i * angleInc;
-        float x = center_x + radius * cos(angle);
-        float y = center_y + radius * sin(angle);
-        glVertex2f(x, y);
+void moveTo(const Point2& p) {
+    glBegin(GL_LINES);
+    glVertex2f(p.x, p.y);
+}
+
+void lineTo(const Point2& p) {
+    glVertex2f(p.x, p.y);
+}
+
+void drawArc(const Point2& center, float radius, float startAngle, float sweep) {
+    const int n = 100; // number of intermediate segments in arc
+    float angle = startAngle * PI / 180; // initial angle in radians
+    float angleInc = sweep * PI / (180 * n); // angle increment
+    float cx = center.getX(), cy = center.getY();
+
+    moveTo(Point2(cx + radius * cos(angle), cy + radius * sin(angle)));
+
+    for (int k = 1; k < n; ++k, angle += angleInc) {
+        lineTo(Point2(cx + radius * cos(angle), cy + radius * sin(angle)));
     }
 
     glEnd();
@@ -28,15 +45,14 @@ void drawArc(float center_x, float center_y, float radius, float startAngle, flo
 void display() {
     glClear(GL_COLOR_BUFFER_BIT);
 
-    glColor3f(0.0, 0.0, 0.0);
+    glColor3f(0.0, 0.0, 0.0); // Set color to red
 
-    float centerX = 0.0;    // X-coordinate of the center
-    float centerY = 0.0;    // Y-coordinate of the center
-    float radius = 0.5;     // Radius of the arc
-    float startAngle = 30;  // Starting angle in degrees
-    float sweepAngle = 120; // Sweep angle in degrees
+    Point2 center(0.0, 0.0);  // Center of the arc
+    float radius = 0.5;       // Radius of the arc
+    float startAngle = 30.0;  // Starting angle in degrees
+    float sweepAngle = 120.0; // Sweep angle in degrees
 
-    drawArc(centerX, centerY, radius, startAngle, sweepAngle);
+    drawArc(center, radius, startAngle, sweepAngle);
 
     glFlush();
 }
