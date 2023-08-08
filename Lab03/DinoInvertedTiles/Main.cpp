@@ -75,9 +75,11 @@ void myDisplay(void)
 	glClear(GL_COLOR_BUFFER_BIT);
 	//drawPolyLineFile("birdhead.dat");		   // send all output to display
 	//drawPolyLineFile("house.dat");
-	setWindow(0, 640, 0, 480);
+
 	for (int i = 0; i < 10; i++) {
 		for (int j = 0; j < 10; j++) {
+			if ((i + j) % 2 == 0) setWindow(0, 640, 0, 480);
+			else setWindow(0, 640, 480, 0);
 			glViewport(i * 64, j * 44, 64, 44);
 			drawPolyLineFile("dino.dat");
 
