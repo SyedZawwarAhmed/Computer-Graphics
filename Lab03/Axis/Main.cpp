@@ -2,7 +2,6 @@
 #include <fstream>
 #include <string>
 #include <GL/glut.h>
-#include <cmath>
 #include <vector>
 
 class Dot {
@@ -22,6 +21,9 @@ int windowHeight = 900;
 int dot_x = -1;
 int dot_y = -1;
 
+float minX = -1.0, minY = -1.0, maxX = 1.0, maxY = 1.0;
+int VPBottom = 0, VPLeft = 0, VPWidth = 1600, VPHeight = 900;
+
 std::vector<Dot> dotsVector = {};
 
 void initGL() {
@@ -31,9 +33,22 @@ void initGL() {
 
 void drawDot(int x, int y) {
 	glColor3f(1.0f, 0.0f, 0.0f);
-	glPointSize(15.0);
+	glPointSize(10.0);
 	glBegin(GL_POINTS);
 	glVertex2i(x, y);
+	glEnd();
+}
+
+void drawAxis() {
+	glColor3f(0.0f, 0.0f, 0.0f);
+	glBegin(GL_LINES);
+	glVertex2f(minX, 0);
+	glVertex2f(maxX, 0);
+	glEnd();
+
+	glBegin(GL_LINES);
+	glVertex2f(0, minY);
+	glVertex2f(0, maxX);
 	glEnd();
 }
 
@@ -41,9 +56,16 @@ void display() {
 	glClear(GL_COLOR_BUFFER_BIT);
 	if (dot_x != -1 && dot_y != -1) {
 	}
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
 	for (int i = 0; i < dotsVector.size(); i++) {
 		drawDot(dotsVector[i].x, dotsVector[i].y);
 	}
+	glViewport(VPBottom, VPLeft, VPWidth, VPHeight);
+	//gluOrtho2D(minX, maxX, minY, maxY);
+	drawAxis();
 	glFlush();
 }
 
