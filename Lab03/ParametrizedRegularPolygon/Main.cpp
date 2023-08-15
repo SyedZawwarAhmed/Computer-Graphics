@@ -45,7 +45,7 @@ void display() {
 
     glColor3f(0.0, 0.0, 0.0); // Set color to red
 
-    int sides = 6;          // Number of sides in the polygon
+    int sides = 15;          // Number of sides in the polygon
     double centerX = 0.0;   // X-coordinate of the center
     double centerY = 0.0;   // Y-coordinate of the center
     double radius = 0.5;    // Radius of the polygon
