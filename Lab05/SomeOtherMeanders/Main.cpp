@@ -112,7 +112,15 @@ void drawMeander() {
 	t.turnRight();
 	t.drawForward(15);
 	t.turnRight();
-	t.drawForward(40);
+	t.drawForward(15);
+	t.turnRight();
+	t.drawForward(5);
+	t.turnleft();
+	t.drawForward(10);
+	t.turnleft();
+	t.drawForward(5);
+	t.turnRight();
+	t.drawForward(15);
 	t.turnRight();
 	t.drawForward(15);
 	t.turnRight();
