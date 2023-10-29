@@ -4,9 +4,8 @@ Your task is to make the plane that makes a crash landing, but unlike the movies
 it doesn't burst into flames.The background contains a triangle for windmill.
 You need to complete it using transformation then make it animate*/
 
-#include<iostream>
-#include<gl/glut.h>
-using namespace std;
+#include <stdlib.h>
+#include "GL/glut.h"
 #define PI 3.141592
 
 void display(void); // draw everything
@@ -21,15 +20,29 @@ void Timer(int value); // update varible for animation here
 void keyboard(unsigned char key, int x, int y);
 void init(void);
 void reshape(GLsizei w, GLsizei h);
+void landplane();
+float windmillRotationAngle = 0.0;
+float planeX = 245.0; // Initial X position of the plane
+float planeY = 230.0; // Initial Y position of the plane
+bool planeLanding = false; // Flag to indicate if the plane is landing
 
-float angle = 0;
-//float t = 0;
-//float vy = 0;
-//float dvy = -9.8;
-//float vx = 4;
-//float dvx = 3;
-//float y = vy + (-9.8 * t);
-//float x = vx + (6 * t);
+
+
+
+
+//void display()
+//{
+	//glClear(GL_COLOR_BUFFER_BIT);
+
+	//drawlandscape();
+	//drawplane();
+	//drawwindmill();
+
+
+	//glutSwapBuffers();
+
+
+//}
 
 
 void display()
@@ -38,33 +51,26 @@ void display()
 
 	drawlandscape();
 
-	/*glPushMatrix();
-	glTranslatef(215.0 - x, 230.0 + y, 0.0);
-	glTranslatef(-215,-230, 0.0);*/
-	drawplane();
-	/*if (-y < 300) {
-		vy += dvy;
-		vx += dvx;
-		t += 1;
-		y = vy + (-9.8 * t);
-		x = vx + (12 * t);
-	}*/
-	/*else {
-		x = 0; y = 0; t = 0;
-	}*/
-	// glPopMatrix();
+	glPushMatrix(); // Push the current matrix state
+	glTranslatef(125.0, 90.0, 0.0); // Translate to the center of the windmill
+	glRotatef(windmillRotationAngle, 0.0, 0.0, 1.0); // Apply windmill rotation
+	glTranslatef(-125.0, -90.0, 0.0); // Translate back to the original position
 
+	drawwindmill(); // Draw the windmill with wings
+	glPopMatrix(); // Pop the previous matrix state
+
+	//drawplane();
 	glPushMatrix();
-	glTranslatef(125.0, 90.0, 0.0);
-	glRotatef(angle * 5.0, 0.0, 0.0, 1.0);
-	glTranslatef(-125.0, -90.0, 0.0);
-	drawwindmill();
+	glTranslatef(230.0, 150.0, 0.0);
+	glRotatef(20.0, 0.0, 0.0, 1.0);
+	glTranslatef(-230.0, -150.0, 0.0);
+
+	landplane();
 	glPopMatrix();
 
 	glutSwapBuffers();
-
-
 }
+
 
 
 void drawWind() // single Triangle
@@ -79,36 +85,125 @@ void drawWind() // single Triangle
 	glEnd();
 }
 
-void drawwindmill() // Complete Windmill
+//void drawwindmill()   // complete windmill in this body
+//{
+	/* Draw a windmill */
+
+	//drawWind();
+
+//}
+
+void drawwindmill()
 {
-	glPushMatrix(); // Save the current transformation matrix
+	//glColor3f(0.6, 0.6, 0.0);
 
-	for (int i = 0; i < 4; i++) {
-		glTranslatef(125.0, 90.0, 0.0); // Translate to the center of the windmill
-		glRotatef(i * 90.0, 0.0, 0.0, 1.0); // Rotate by 90 degrees
+	// Draw the central body of the windmill
+	//glBegin(GL_QUADS);
+	//glVertex2f(145.0, 50.0);
+	//glVertex2f(135.0, 100.0);
+	//glVertex2f(115.0, 100.0);
+	//glVertex2f(105.0, 50.0);
+	//glEnd();
+
+	// Draw the four wings of the windmill
+	for (int i = 0; i < 4; i++)
+	{
+		glPushMatrix();
+		glTranslatef(125.0, 90.0, 0.0);
+		//glTranslatef(125.0, 75.0, 0.0); // Translate to the center of the windmill
+		glRotatef(i * 90.0, 0.0, 0.0, 1.0); // Rotate the wing
 		glTranslatef(-125.0, -90.0, 0.0); // Translate back to the original position
-		drawWind(); // Draw the blade
-	}
 
-	glPopMatrix(); // Restore the previous transformation matrix
+		drawWind(); // Draw a single wing
+		glPopMatrix();
+	}
 }
 
 
 
-void Timer(int value) // work in this function after completing windmill to animate it
-{
+
+//void Timer(int value) // work in this function after completing windmill to animate it
+//{
 	//update variables here
 
 
-	display();
-	angle++;
-	glutTimerFunc(50, Timer, 1);
+	//display();
+	//glutTimerFunc(30, Timer, 1);
+//}
+
+void Timer(int value)
+{
+	// Update the rotation angle for the windmill
+	windmillRotationAngle += 4.0; // Adjust the rotation speed as needed
+
+	// Keep the rotation angle within 360 degrees
+	if (windmillRotationAngle >= 360.0)
+	{
+		windmillRotationAngle -= 360.0;
+	}
+
+	// Redisplay the scene
+	glutPostRedisplay();
+
+	// Set the next timer callback
+	//display();
+	glutTimerFunc(30, Timer, 1);
+
+	if (planeY <= 50.0)
+	{
+		planeLanding = false;
+	}
 }
 
 
-void drawplane()// work in this function to animate and crash plane
+void landplane()
+{
+		glPushMatrix();
+		glTranslatef(230.0, 210.0, 0.0);
+		glRotatef(-60.0,0.0,0.0,1.0);
+		glTranslatef(-230.0, -245.0, 0.0);
+
+		drawplane();
+		glPopMatrix();
+
+	// Trigger the plane landing animation
+	if (planeY > 50.0)
+	{
+		planeLanding = true;
+	}
+}
+
+
+
+void drawplane()
 {
 	/* Draw a plane */
+
+	if (planeLanding)
+	{
+		// If the plane is landing, move it downward smoothly
+		planeY -= 2.0;
+	}
+
+	glBegin(GL_TRIANGLES);
+
+	glColor3f(1.0, 1.0, 1.0);
+	glVertex2f(planeX, planeY);
+	glVertex2f(planeX, planeY + 10.0);
+	glVertex2f(planeX - 30.0, planeY);
+
+	glColor3f(0.2, 0.2, 0.2);
+	glVertex2f(planeX - 1.0, planeY - 2.0);
+	glVertex2f(planeX - 1.0, planeY + 5.0);
+	glVertex2f(planeX - 17.0, planeY + 5.0);
+
+	glEnd();
+}
+
+
+//void drawplane()// work in this function to animate and crash plane
+//{
+	/* Draw a plane 
 
 	glBegin(GL_TRIANGLES);
 
@@ -125,7 +220,7 @@ void drawplane()// work in this function to animate and crash plane
 	glEnd();
 
 
-}
+}*/
 
 void main(int argc, char** argv)
 {
@@ -133,12 +228,12 @@ void main(int argc, char** argv)
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowPosition(50, 50);
 	glutInitWindowSize(500, 500);
-	glutCreateWindow("BSCS 514 Lab #8");
+	glutCreateWindow("Windmill Lab");
 	init();
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
 	glutKeyboardFunc(keyboard);
-	glutTimerFunc(50, Timer, 1);
+	glutTimerFunc(30, Timer, 1);
 	glutMainLoop();
 }
 
@@ -231,10 +326,9 @@ void reshape(GLsizei w, GLsizei h)
 
 void keyboard(unsigned char key, int x, int y)
 {
-	switch (key)
+
+	if (key == 'q')
 	{
-	case 27:
 		exit(0);
-		break;
 	}
 }
